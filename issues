@@ -1,0 +1,2 @@
+1. casperjs 对没有认证对号不能进行分析，如何处理这种错误。
+   var names = ['aia585', 'yu-ren-dao','erhdby']

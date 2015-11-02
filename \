@@ -1,0 +1,26 @@
+##-*- coding: utf-8 -*-
+from config import *
+
+import re
+import urllib
+from bs4 import BeautifulSoup
+
+
+def getHtml(url):
+    page = urllib.urlopen(url)
+    html = page.read()
+    page.close()
+    soup = BeautifulSoup(html).find_all("div", attrs={"class":"wx-rb bg-blue wx-rb_v1 _item"}, limit=1)[0]
+    #print soup
+    page = urllib.urlopen(host + soup)
+    html = page.read()
+    page.close()
+    return html
+
+def getTitle(html):
+    soup = BeautifulSoup(html).find_all("h4.a", attrs={"class":"news_lst_tab zhz"})
+    return soup     
+   
+for item in names :
+	html = getHtml(url + item)
+	print getTitle(html)
