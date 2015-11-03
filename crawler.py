@@ -53,17 +53,21 @@ def parse(text):
         time = ''
         addr = ''
         try:
-            m = re.search(u"时间[^\u4e00-\u9fa5\d]*(\d{4}年)?(\d{1,2}月\d{2}日)", text.decode('utf8'))
+            m = re.search(u"时间[^\u4e00-\u9fa5\d]*(\d{4}年)?(\d{1,2}月\d{1,2}日)", text.decode('utf8')) #时间：11月20日
             if (m == None):
-                m = re.search(u"(\d{4}年)?(\d{1,2}月\d{1,2}日\s*\d{2}[:：]\d{2}.{0,2}\d{2}[:：]\d{2})", text.decode('utf8'))
+                m = re.search(u"(\d{4}年)?(\d{1,2}月\d{1,2}日\s*(\W?(周|星期).\W?)?\s*\d{2}[:：]\d{2}[^a-zA-Z0-9\u4e00-\u9fa5]{0,2}\d{2}[:：]\d{2})", text.decode('utf8')) #10月10日 10:12-12:33
+            if (m == None):
+                m = re.search(u"(时间\D{0,2})(.{0,10}\d{1,2}([:：]\d{2})?(am|pm)?[^a-zA-Z0-9\u4e00-\u9fa5]{1,2}?\d{1,2}([:：]\d{2})?(am|pm)?)", text.decode('utf8')) #时间：12/2 (周二) 8pm－9:14pm
             time = m.group(2)
         except Exception , e:
-            print(e)
+            # print(e)
+            1
         try:
-            m =  re.search(u"地[点址][^\u4e00-\u9fa5]{0,3}([\u4e00-\u9fa5]{4,10})", text.decode('utf8'))
+            m = re.search(u"[\u4e00-\u9fa5]{0,2}地[点址]\n?[^\u4e00-\u9fa5a-zA-Z]{0,2}[:：]\n?(.+)\n", text.decode('utf8'))
             addr = m.group(1)
         except Exception , e:
-            print(e)
+            # print(e)
+            1
         return (time, addr)
     return ["",""]
 
@@ -71,12 +75,10 @@ def hasKeywords(text):
     key_words_first_class = ["路演"]
     for key in key_words_first_class:
         if (text.find(key) != -1) :
-            # print "found keyword " + key
             return True
     key_words_second_class = ["项目", "投资人"]
     for key in key_words_second_class:
         if (text.find(key) == -1) :
-            print "no keyword found : " + key
             return False
     return True
 def doRun(url):
@@ -88,35 +90,42 @@ def doRun(url):
     html = BeautifulSoup(html,"html.parser")
     title = html.title.text
     [x.extract() for x in html.body.find_all('script')]
-    # print html.body.text
-    (a,b) = parse(html.body.text)
+    for x in html.body.find_all('br'):
+        # print x.text
+        div = html.new_tag('p')
+        x.wrap(div)
+        # print div.text
+    content = "\n".join(html.body.findAll(text=True))
+    # print content
+    (a,b) = parse(content)
 
-    if (a != "" or b != ""):
+    if (a != ""):
         rel = {}
         rel['time'] = a
         rel['addr'] = b
         rel['title'] = title
         rel['href'] = url
+        print rel['time'] + "   " + rel['addr'] + ' ' + rel['href']
         requrl = "http://119.254.100.198:4502/content/wx/*"
         data = json.dumps(rel,ensure_ascii=False)
 
         data = urllib.urlencode(rel)
-        print data
+        # print data
         req = urllib2.Request(url = requrl,data = data)
         base64string = base64.encodestring('%s:%s' % ('admin', 'admin'))[:-1]
         authheader = "Basic %s" % base64string
         req.add_header("Authorization", authheader)
         # req.add_header("content-type", 'text/html;charset=UTF-8')
         resp = urllib2.urlopen(req)
-        print json.dumps(rel,ensure_ascii=False)
+        # print json.dumps(rel,ensure_ascii=False)
     else:
-        print 'no found'
-
+        # print 'no found'
+        1
 def run():
     urls = getLinks()
     for url in urls:
         doRun(url)
-        
+
 def getLinks():
     i = datetime.datetime.now()
     fname = './js/data/' + str(i.year) + '-' + str(i.month) + '-' + str(i.day) + '.txt'
@@ -124,4 +133,6 @@ def getLinks():
     return content
 
 
-
+run()
+# doRun('http://mp.weixin.qq.com/s?__biz=MjM5MTIzNjU2Mg==&mid=208942871&idx=1&sn=45c96640592c729f4e0ad37e2738f2cd&3rd=MzA3MDU4NTYzMw==&scene=6#rd')
+# doRun('http://mp.weixin.qq.com/s?__biz=MjM5MTIzNjU2Mg==&mid=400182398&idx=1&sn=94919e64192caa5d6bf17972571ca48b&3rd=MzA3MDU4NTYzMw==&scene=6#rd')

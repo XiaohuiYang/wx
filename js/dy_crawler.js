@@ -1,4 +1,4 @@
-var names = ['eee969','二手车']
+var names = ['36Kr股权投资', '优投网', '高新园区金融平台', '天使汇', '中关村创业大街',  '真格基金', '无界空间','清华校友tmt协会',  '国银基金', '清创孵化器', '创伙伴', 'IC咖啡']
 var _url = "http://weixin.sogou.com/weixin?type=1&query="
 var fs = require('fs');
 
@@ -10,7 +10,7 @@ var casper = require('casper').create();
 
 casper.start().eachThen(names, function(response) {
 	data = response.data;
-	this.wait(60000, function() {
+	this.wait(600, function() {
 	 	console.log(_url + data);
 	 	console.log(new Date().toLocaleTimeString())
  		crawler(_url + data);
@@ -41,7 +41,7 @@ function crawler(url) {
 
 	casper.waitFor(function check() {
 	    return this.evaluate(function() {
-	        return document.querySelectorAll('a.news_lst_tab.zhz').length > 9;
+	        return document.querySelectorAll('a.news_lst_tab.zhz').length > 8;
 	    });
 	});
 
@@ -66,7 +66,7 @@ function check(casper, url, i) {
 
 	casper.open(url);
 
-	if (i/2 >= 11) {
+	if (i/2 >= 10) {
 		handle();
 		//casper.exit();
 		return;
@@ -74,7 +74,7 @@ function check(casper, url, i) {
 
 	casper.waitFor(function check() {
 	    return this.evaluate(function() {
-	        return document.querySelectorAll('a.news_lst_tab.zhz').length > 9;
+	        return document.querySelectorAll('a.news_lst_tab.zhz').length > 8;
 	    });
 	});
 
