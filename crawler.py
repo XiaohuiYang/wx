@@ -133,6 +133,6 @@ def getLinks():
     return content
 
 
-run()
+# run()
 # doRun('http://mp.weixin.qq.com/s?__biz=MjM5MTIzNjU2Mg==&mid=208942871&idx=1&sn=45c96640592c729f4e0ad37e2738f2cd&3rd=MzA3MDU4NTYzMw==&scene=6#rd')
 # doRun('http://mp.weixin.qq.com/s?__biz=MjM5MTIzNjU2Mg==&mid=400182398&idx=1&sn=94919e64192caa5d6bf17972571ca48b&3rd=MzA3MDU4NTYzMw==&scene=6#rd')

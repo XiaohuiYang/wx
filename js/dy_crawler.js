@@ -6,29 +6,59 @@ var fs = require('fs');
 
 var old = fs.read('./data/all.txt');
 var rels = [];
-var casper = require('casper').create();
-
-casper.start().eachThen(names, function(response) {
-	data = response.data;
-	this.wait(600, function() {
-	 	console.log(_url + data);
-	 	console.log(new Date().toLocaleTimeString())
- 		crawler(_url + data);
- 		console.log('cccccccc');	
-	});
+var casper = require('casper').create({
+    waitTimeout: 20000,
+    stepTimeout: 20000,
+    verbose: true,
+    viewportSize: {
+      width: 1400,
+      height: 768
+    },
+    pageSettings: {
+      "userAgent": 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.10 (KHTML, like Gecko) Chrome/23.0.1262.0 Safari/537.10',
+      "loadImages": false,
+      "loadPlugins": false,         
+      "webSecurityEnabled": false,
+      "ignoreSslErrors": true
+    },
+    onWaitTimeout: function() {
+    	console.log("timeout");
+        handle();
+    },
+    onStepTimeout: function() {
+        console.log("step timeout");
+        handle();
+    }
 });
 
-casper.run();
+// casper.start().eachThen(names, function(response) {
+// 	data = response.data;
+// 	this.wait(600, function() {
+// 	 	console.log(_url + data);
+// 	 	console.log(new Date().toLocaleTimeString())
+//  		crawler(_url + data);
+//  		console.log('cccccccc');	
+// 	});
+// });
 
-//crawler(_url + 'aia585'); 
+data = casper.cli.args[0];
+// console.log(data)
+crawler(_url + data);
+
 
 function crawler(url) {
 	// var link;
 	casper.on('step.error', function(err) {
-		console.log('aaaaaa');
+		console.log('step.error');
 	    console.log(err);
 	});
-	casper.open(url);
+
+	casper.on('step.timeout', function(err) {
+		console.log('step.timeout');
+	    console.log(err);
+	});
+
+	casper.start().open(url);
 	casper.then(function() {
 		this.evaluate(function () {
 		    [].forEach.call(__utils__.findAll('a'), function(link) {
@@ -53,7 +83,9 @@ function crawler(url) {
 
 	casper.then(function() {
 		check(this, this.getCurrentUrl(), 2);
-	})
+	});
+
+	casper.run();
 }
 
 
