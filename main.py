@@ -28,7 +28,7 @@ def analysis():
     run()
 
 schedule.every().minutes.do(crawler)
-schedule.every().day.do(analysis)
+schedule.every().day.at("23:15").do(analysis)
 
 while True:
     schedule.run_pending()

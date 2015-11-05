@@ -9,11 +9,7 @@ var rels = [];
 var casper = require('casper').create({
     waitTimeout: 20000,
     stepTimeout: 20000,
-    verbose: true,
-    viewportSize: {
-      width: 1400,
-      height: 768
-    },
+    verbose: false,
     pageSettings: {
       "userAgent": 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.10 (KHTML, like Gecko) Chrome/23.0.1262.0 Safari/537.10',
       "loadImages": false,
@@ -23,10 +19,6 @@ var casper = require('casper').create({
     },
     onWaitTimeout: function() {
     	console.log("timeout");
-        handle();
-    },
-    onStepTimeout: function() {
-        console.log("step timeout");
         handle();
     }
 });

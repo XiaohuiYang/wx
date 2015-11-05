@@ -128,7 +128,7 @@ def run():
 
 def getLinks():
     i = datetime.datetime.now()
-    fname = './js/data/' + str(i.year) + '-' + str(i.month) + '-' + str(i.day) + '.txt'
+    fname = './data/' + str(i.year) + '-' + str(i.month) + '-' + str(i.day) + '.txt'
     content = open(fname).read().split(',')
     return content
 
