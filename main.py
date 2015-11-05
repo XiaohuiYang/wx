@@ -27,7 +27,7 @@ def analysis():
     logger.info("I'm working..." + time.ctime())
     run()
 
-schedule.every().minutes.do(crawler)
+schedule.every(20).minutes.do(crawler)
 schedule.every().day.at("23:15").do(analysis)
 
 while True:
