@@ -106,7 +106,7 @@ def doRun(url):
         rel['title'] = title
         rel['href'] = url
         print rel['time'] + "   " + rel['addr'] + ' ' + rel['href']
-        requrl = "http://119.254.100.198:4502/content/wx/*"
+        requrl = "http://119.254.100.198:4502/content/wx/" + datetime.datetime.now().date().isoformat() + "/*"
         data = json.dumps(rel,ensure_ascii=False)
 
         data = urllib.urlencode(rel)
