@@ -9,7 +9,8 @@ var rels = [];
 var casper = require('casper').create({
     waitTimeout: 20000,
     stepTimeout: 20000,
-    verbose: false,
+    //verbose: true,
+    logLevel: "debug",
     pageSettings: {
       "userAgent": 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.10 (KHTML, like Gecko) Chrome/23.0.1262.0 Safari/537.10',
       "loadImages": false,
@@ -33,11 +34,12 @@ var casper = require('casper').create({
 // 	});
 // });
 
-data = casper.cli.args[0];
+// data = casper.cli.args[0];
+data = '36Kr股权投资';
 // console.log(data)
 crawler(_url + data);
 
-
+var doc;
 function crawler(url) {
 	// var link;
 	casper.on('step.error', function(err) {
@@ -52,13 +54,17 @@ function crawler(url) {
 
 	casper.start().open(url);
 	casper.then(function() {
+		var link;
 		this.evaluate(function () {
 		    [].forEach.call(__utils__.findAll('a'), function(link) {
 		        link.removeAttribute('target');
 		    });
 		});
-		this.echo(this.getTitle()); // "Google" 
-		this.click('div.wx-rb.bg-blue.wx-rb_v1._item');	
+		link = 'http://weixin.sogou.com' + this.getElementAttribute('div[class="wx-rb bg-blue wx-rb_v1 _item"]', 'href');
+		this.echo(this.getElementAttribute('div[class="wx-rb bg-blue wx-rb_v1 _item"]', 'href')); // "Google" 
+
+		//this.click('div.wx-rb.bg-blue.wx-rb_v1._item');
+		this.open(link);
 	});
 
 	casper.waitFor(function check() {
@@ -74,7 +80,7 @@ function crawler(url) {
 	});
 
 	casper.then(function() {
-		check(this, this.getCurrentUrl(), 2);
+		check(this, this.getCurrentUrl(), 1);
 	});
 
 	casper.run();
