@@ -12,6 +12,9 @@ from ghost import Ghost
 import json
 import base64
 import datetime
+import mylog
+
+logger = mylog.logger
 # ghost = Ghost()
 
 # url =  'http://mp.weixin.qq.com/s?__biz=MzA4NDU4Nzc2Ng==&mid=400136635&idx=1&sn=6ada0f67d9281876b077d7e26927bba5&3rd=MzA3MDU4NTYzMw==&scene=6#rd'
@@ -123,9 +126,14 @@ def doRun(url):
         # print 'no found'
         1
 def run():
+    
     urls = getLinks()
     for url in urls:
-        doRun(url)
+        logger.info('begin to analyze ' +  url)
+        try:
+            doRun(url)
+        except Exception , e:
+            logger.error(e)
 
 def getLinks():
     i = datetime.datetime.now()
