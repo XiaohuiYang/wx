@@ -1,0 +1,3 @@
+#!/bin/sh
+cd  /root/fintech/wx
+python main.py 
