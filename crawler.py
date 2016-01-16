@@ -83,6 +83,7 @@ def hasKeywords(text):
     return True
 def doRun(url):
     sys.setdefaultencoding('utf8')
+    #print url
     html = getHtml(url)
     # print html
     # print getTitle(html)
@@ -128,9 +129,13 @@ def run():
 
 def getLinks():
     i = datetime.datetime.now()
-    fname = './data/' + str(i.year) + '-' + str(i.month) + '-' + str(i.day) + '.txt'
-    content = open(fname).read().split(',')
-    return content
+    try:
+    	fname = './data/' + str(i.year) + '-' + str(i.month) + '-' + str(i.day) + '.txt'
+    	content = open(fname).read().split(',')
+        return content
+    except Exception,e:
+	print e
+	return []
 
 
 # run()

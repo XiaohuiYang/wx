@@ -58,7 +58,12 @@ function crawler(url) {
 		    });
 		});
 		this.echo(this.getTitle()); // "Google" 
-		this.click('div.wx-rb.bg-blue.wx-rb_v1._item');	
+
+		link = 'http://weixin.sogou.com' + this.getElementAttribute('div[class="wx-rb bg-blue wx-rb_v1 _item"]', 'href');
+		this.echo(this.getElementAttribute('div[class="wx-rb bg-blue wx-rb_v1 _item"]', 'href')); // "Google" 
+
+		//this.click('div.wx-rb.bg-blue.wx-rb_v1._item');
+		this.open(link);	
 	});
 
 	casper.waitFor(function check() {
