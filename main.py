@@ -3,11 +3,28 @@
 import schedule
 import time
 import subprocess
-import logging
+import mylog
+import ConfigParser
+
 from crawler import run
 
-logger = logging.getLogger('main')
-names = ['36Kr股权投资', '优投网', '高新园区金融平台', '天使汇', '中关村创业大街',  '真格基金', '无界空间','清华校友tmt协会',  '国银基金', '清创孵化器', '创伙伴', 'IC咖啡']
+
+cf = ConfigParser.ConfigParser()
+ 
+cf.read("config.conf")
+names = cf.get("wx", "names")
+
+logger = mylog.logger
+
+
+# fh = logging.FileHandler('test.log') 
+# fh.setLevel(logging.DEBUG) 
+# formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s') 
+# fh.setFormatter(formatter)
+
+# logger = logging.getLogger('main')
+# logger.addHandler(fh)
+
 counter = 0;
 # print names[counter]
 
@@ -17,18 +34,18 @@ def crawler():
     counter = counter % len(names)
     # print 'aaa'
     print names[counter]
-    logger.info("I'm working..." + time.ctime())
+    logger.info("启动casper抓取账号" + names[counter]+ " at "+ time.ctime())
     CASPERJS_EXECUTABLE = "casperjs" # <-- here you put the path to you casperjs executable
     CASPERJS_SCRIPT = "./js/dy_crawler.js" # this is the name of the script that casperjs should execute
     stdout_as_string = subprocess.Popen([CASPERJS_EXECUTABLE, CASPERJS_SCRIPT, names[counter]])
     # print 'bbb'
     # print stdout_as_string
 def analysis():
-    logger.info("I'm working..." + time.ctime())
+    logger.info("开始分析" + time.ctime())
     run()
 
-schedule.every(20).minutes.do(crawler)
-schedule.every().day.at("21:42").do(analysis)
+schedule.every(10).minutes.do(crawler)
+schedule.every().day.at("15:06").do(analysis)
 
 while True:
     schedule.run_pending()
